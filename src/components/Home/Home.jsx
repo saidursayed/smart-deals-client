@@ -9,7 +9,7 @@ const latestProductsPromise = fetch(
 const Home = () => {
   return (
     <div>
-      <h3 className="bg-primary">This is Home</h3>
+      <h3 className="bg-purple-600">This is Home</h3>
       <LatestProducts
         latestProductsPromise={latestProductsPromise}
       ></LatestProducts>
