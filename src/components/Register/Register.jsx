@@ -2,38 +2,36 @@ import React, { use } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Register = () => {
-    const {signInWithGoogle} = use(AuthContext);
+  const { signInWithGoogle } = use(AuthContext);
 
-    const handleGoogleSignIn = () => {
-        signInWithGoogle()
-        .then(result=>{
-            console.log(result);
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result);
 
+        const newUser = {
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL,
+        };
 
-            const newUser = {
-                name: result.user.displayName,
-                email: result.user.email,
-                image: result.user.photoURL
-
-            }
-
-            // create user in the database
-            fetch('http://localhost:3000/users', {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(newUser)
-            })
-            .then(res=>res.json())
-            .then(data=>{
-                console.log('data after user save', data);
-            })
+        // create user in the database
+        fetch("https://smart-deals-api-server-phi-seven.vercel.app/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
         })
-        .catch(error=>{
-            console.log(error)
-        })
-    }
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("data after user save", data);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="card bg-base-100 w-full max-w-sm mx-auto shrink-0 shadow-2xl">
       <h1 className="text-5xl font-bold">Register now!</h1>
@@ -50,7 +48,10 @@ const Register = () => {
           <button className="btn btn-neutral mt-4">Register</button>
         </fieldset>
         {/* Google */}
-        <button onClick={handleGoogleSignIn} className="btn bg-white text-black border-[#e5e5e5]">
+        <button
+          onClick={handleGoogleSignIn}
+          className="btn bg-white text-black border-[#e5e5e5]"
+        >
           <svg
             aria-label="Google logo"
             width="16"

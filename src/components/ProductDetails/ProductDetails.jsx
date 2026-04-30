@@ -2,6 +2,7 @@ import React, { use, useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const ProductDetails = () => {
   const { _id: productId } = useLoaderData();
@@ -11,13 +12,24 @@ const ProductDetails = () => {
   // console.log("single product", product);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${productId}`)
-      .then((res) => res.json())
+    axios
+      .get(
+        `https://smart-deals-api-server-phi-seven.vercel.app/products/bids/${productId}`,
+      )
       .then((data) => {
-        console.log("bids for this products", data);
-        setBids(data);
+        console.log("after axios get", data);
+        setBids(data.data);
       });
   }, [productId]);
+
+  // useEffect(() => {
+  //   fetch(`https://smart-deals-api-server-phi-seven.vercel.app/products/bids/${productId}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log("bids for this products", data);
+  //       setBids(data);
+  //     });
+  // }, [productId]);
 
   const handleBidModalOpen = () => {
     bidModalRef.current.showModal();
@@ -38,7 +50,7 @@ const ProductDetails = () => {
       status: "pending",
     };
 
-    fetch("http://localhost:3000/bids", {
+    fetch("https://smart-deals-api-server-phi-seven.vercel.app/bids", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -59,7 +71,7 @@ const ProductDetails = () => {
           // add the new bid to the state
           newBid._id = data.insertedId;
           const newBids = [...bids, newBid];
-          newBids.sort((a,b)=> b.bid_price - a.bid_price)
+          newBids.sort((a, b) => b.bid_price - a.bid_price);
           setBids(newBids);
         }
         console.log("after placing bid", data);
@@ -148,7 +160,7 @@ const ProductDetails = () => {
             <tbody>
               {/* row 1 */}
               {bids.map((bid, index) => (
-                <tr>
+                <tr key={bid._id}>
                   <th>{index + 1}</th>
                   <td>
                     <div className="flex items-center gap-3">

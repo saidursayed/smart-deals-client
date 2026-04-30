@@ -14,6 +14,8 @@ import Register from "./components/Register/Register.jsx";
 import MyProducts from "./components/MyProducts/MyProducts.jsx";
 import MyBids from "./components/MyBids/MyBids.jsx";
 import ProductDetails from "./components/ProductDetails/ProductDetails.jsx";
+import PrivateRoute from "./Routes/PrivateRoute.jsx";
+import CreateAProduct from "./components/CreateAProduct/CreateAProduct.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,21 +32,44 @@ const router = createBrowserRouter([
       },
       {
         path: "register",
-        Component: Register
+        Component: Register,
       },
       {
         path: "myProducts",
-        element: <MyProducts></MyProducts>
+        element: (
+          <PrivateRoute>
+            <MyProducts></MyProducts>
+          </PrivateRoute>
+        ),
       },
       {
         path: "myBids",
-        element: <MyBids></MyBids>
+        element: (
+          <PrivateRoute>
+            <MyBids></MyBids>
+          </PrivateRoute>
+        ),
       },
       {
-        path: 'productDetails/:id',
-        loader: ({params}) => fetch(`http://localhost:3000/products/${params.id}`),
-        Component: ProductDetails
-      }
+        path: "productDetails/:id",
+        loader: ({ params }) =>
+          fetch(
+            `https://smart-deals-api-server-phi-seven.vercel.app/products/${params.id}`,
+          ),
+        element: (
+          <PrivateRoute>
+            <ProductDetails></ProductDetails>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "createAProduct",
+        element: (
+          <PrivateRoute>
+            <CreateAProduct></CreateAProduct>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);
